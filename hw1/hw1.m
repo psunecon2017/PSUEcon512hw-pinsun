@@ -16,14 +16,15 @@ sum(X)
 % Problem 3
 A=[2 4 6; 1 7 5; 3 12 4];
 b=[-2;3;10];
-C=A'*b;
+C=A'*b
 AA=A'*A;
-D=AA\b;
+D=AA\b
 Ab=A'*b;
-E=sum(Ab);
+E=sum(Ab)
 F=A;
 F(:,3)=[];
 F(2,:)=[];
+F
 % Gauss-Seidel method ( cannot use it because here it is not a contraction mapping)
 %Q=tril(A);
 %x=[1;1;1]; % initial guessing
@@ -41,14 +42,14 @@ F(2,:)=[];
    % end
 %end
 %norm(eye(4)-Q\A)
-x=A\b;
+x=A\b
 
 % Problem 4
 B=blkdiag(diag(diag(A)),diag(diag(A)),diag(diag(A)), ...
-diag(diag(A)),diag(diag(A)));
+diag(diag(A)),diag(diag(A)))
 
 % Problem 5
-rng(100);
+%rng(100);
 A=normrnd(10,5,[5,3]);
 [n,m]=size(A);
 for i=1:n
@@ -60,7 +61,7 @@ for i=1:n
       end
       end
 end
- 
+A 
 % Problem 6
 
 data0=csvread('datahw1.csv');
@@ -84,23 +85,23 @@ for i=1:numr
 end
 XX=data1'*data1;
 %Q=tril(XX);
-betahat=XX\data1'*data2; 
-err2hat=sum((data2-data1*betahat)'*(data2-data1*betahat))/(numr-4);
-varbetahat=XX\(err2hat*eye(4));
+betahat=XX\data1'*data2 
+err2hat=sum((data2-data1*betahat)'*(data2-data1*betahat))/(numr-4)
+varbetahat=XX\(err2hat*eye(4))
 
-b=eye(4);
-mL = eye(size(XX));
-mU = XX;
-nEq = length(b);
-for c = 1:nEq-1
-    for r = c+1:nEq
-        mL(r,c) =  mU(r,c)/mU(c,c);
-        mU(r,:) =  mU(r,:) - mU(c,:)*mL(r,c);
+%b=eye(4);
+%mL = eye(size(XX));
+%mU = XX;
+%nEq = length(b);
+%for c = 1:nEq-1
+ %   for r = c+1:nEq
+ %       mL(r,c) =  mU(r,c)/mU(c,c);
+ %       mU(r,:) =  mU(r,:) - mU(c,:)*mL(r,c);
         %[mU; mL]; %Output Suprressed
-    end
-end
-y = mL\b;
-mx = mU\y
+ %   end
+%end
+%y = mL\b;
+%mx = mU\y
 
 
 
