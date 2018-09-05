@@ -45,8 +45,9 @@ F
 x=A\b
 
 % Problem 4
-B=blkdiag(diag(diag(A)),diag(diag(A)),diag(diag(A)), ...
-diag(diag(A)),diag(diag(A)))
+B=blkdiag(A,A,A,A,A)
+%B=blkdiag(diag(diag(A)),diag(diag(A)),diag(diag(A)), ...
+%diag(diag(A)),diag(diag(A)))
 
 % Problem 5
 %rng(100);
@@ -85,9 +86,10 @@ for i=1:numr
 end
 XX=data1'*data1;
 %Q=tril(XX);
-betahat=XX\data1'*data2 
-err2hat=sum((data2-data1*betahat)'*(data2-data1*betahat))/(numr-4)
-varbetahat=XX\(err2hat*eye(4))
+betahat=XX\data1'*data2; 
+err2hat=sum((data2-data1*betahat)'*(data2-data1*betahat))/(numr-4);
+varbetahat=XX\(err2hat*eye(4));
+stdbetahat=sqrt(varbetahat)
 
 %b=eye(4);
 %mL = eye(size(XX));
