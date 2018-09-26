@@ -88,17 +88,17 @@ toc
 
 % Problem 5
 % Broyden method
-clear; clc; close all;
-vB=0:.2:3;
-numB=length(vB);
-maxit=100;
-p=zeros(2,numB);
-tol = 1e-6; 
-tic
-for i=1:numB
-  p1=[1;1];
-  for 
-end
+%clear; clc; close all;
+%vB=0:.2:3;
+%numB=length(vB);
+%maxit=100;
+%p=zeros(2,numB);
+%tol = 1e-6; 
+%tic
+%for i=1:numB
+%  p1=[1;1];
+ % for 
+%end
 % Gauss method
 clear; clc; close all;
 vB=0:.2:3;
@@ -135,6 +135,7 @@ for i=1:numB
     end
     end
 end
+toc
 plot(vB(:),p(1,:),vB(:),p(2,:))
 legend('A price','B Price')
 

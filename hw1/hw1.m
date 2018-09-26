@@ -1,6 +1,8 @@
+% use double percent marks to divide into sections
+
 % Econ512 homework 1 Pin Sun
 
-% Problem 1
+%% Problem 1
 
 X=[1 1.5 3 4 5 7 9 10];
 Y1=-1+0.5*X;
@@ -8,12 +10,12 @@ Y2=-2+0.5*X.^2;
 plot(X,Y1,X,Y2);
 legend('Y1=-1+0.5X','Y2=-2+0.5X^2')
 
-% Problem 2
+%% Problem 2
 
 X=linspace(-10,20,200)';
 sum(X)
 
-% Problem 3
+%% Problem 3
 A=[2 4 6; 1 7 5; 3 12 4];
 b=[-2;3;10];
 C=A'*b
@@ -44,15 +46,18 @@ F
 %norm(eye(4)-Q\A)
 x=A\b
 
-% Problem 4
+%% Problem 4
 B=blkdiag(A,A,A,A,A)
+% better to use kron() function as it's faster and saves space
+
 %B=blkdiag(diag(diag(A)),diag(diag(A)),diag(diag(A)), ...
 %diag(diag(A)),diag(diag(A)))
 
-% Problem 5
+%% Problem 5
 %rng(100);
 A=normrnd(10,5,[5,3]);
 [n,m]=size(A);
+% see answer key, it can be done with much less code
 for i=1:n
   for j=1:m
     if A(i,j)<10 
@@ -63,7 +68,10 @@ for i=1:n
       end
 end
 A 
-% Problem 6
+%% Problem 6
+
+% csvread replaces NaN with zero, it makes the estimates of coefficients a
+% little biased
 
 data0=csvread('datahw1.csv');
 [numr,numc]=size(data0);
