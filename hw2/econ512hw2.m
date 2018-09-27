@@ -1,5 +1,5 @@
-
-% Problem 2
+% Econ 512 homework 2 Pin Sun
+%% Problem 2^M
 clear;
 close all;
 p=[1;1];
@@ -24,7 +24,7 @@ for iter = 1:maxit
 end
 toc
 
-% Problem 3
+%% Problem 3^M
 
 clear; close all;
 v=[2;2];
@@ -58,7 +58,7 @@ for iter =1:maxit
 end
 toc
 
-% Problem 4
+%% Problem 4^M
 
 clear; close all;
 v=[2;2];
@@ -86,7 +86,7 @@ for iter =1:maxit
 end
 toc
 
-% Problem 5
+%% Problem 5^M
 % Broyden method
 %clear; clc; close all;
 %vB=0:.2:3;
