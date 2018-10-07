@@ -1,10 +1,11 @@
 % Econ 512 homework 2 Pin Sun
+
 %% Problem 2
 clear;
 close all;
 p=[1;1];
 v=[2;2];
-fVal=betrand(p,v);
+fVal=betrand(p,v); % this is actually part 1. I need to see it in output of your program.
 iJac=inv(myJac('betrand',p,v));
 maxit = 100; 
 tol = 1e-6; 
