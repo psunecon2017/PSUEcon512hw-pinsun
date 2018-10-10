@@ -1,0 +1,23 @@
+function [fval, fjac]=loglike(y,X,beta)
+
+% Evaluate function
+%fval=sum(-X(:,:).*exp(X(:,1)*beta(1)+X(:,2)*beta(2)+ ...
+%X(:,3)*beta(3)+X(:,4)*beta(4)+X(:,5)*beta(5) ...
+%+X(:,6)*beta(6))+X(:,:).*y(:,1))'/length(y);
+fval=zeros(length(beta),1);
+for i=1:length(beta)
+fval(i,1)=sum(-X(:,i).*exp(X(:,1)*beta(1)+X(:,2)*beta(2)+ ...
+X(:,3)*beta(3)+X(:,4)*beta(4)+X(:,5)*beta(5) ...
++X(:,6)*beta(6))+X(:,i).*y(:,1))/length(y);
+end
+
+%for i=1:length(y)
+   % fval(:,1)=fval(:,1)+(-X(i,:)'.*exp(X(i,:)*beta')+X(i,:)'.* ...
+    %    y(i,1))/length(y);
+%end
+% Evaluate Jacobian
+fjac=zeros(length(beta),length(beta));
+%fjac=sum(-(X(:,:)*X(:,:)').*exp(X(:,1)*beta(1)+X(:,2)*beta(2)+ ...
+%X(:,3)*beta(3)+X(:,4)*beta(4)+X(:,5)*beta(5) ...
+%+X(:,6)*beta(6)));
+
