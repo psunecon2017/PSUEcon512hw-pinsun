@@ -14,6 +14,8 @@ clear;
 close all; 
 Num=1e5;
 [n, w] = qnwequi(Num, [0 0], [1, 1], 'N');
+% you are using points from QMC here, but you should have generated NC
+% points instead
 Pie(:)=Int_simp(@(x) 4*((n(:,1).^2+x.^2)<=1), 0, 1, 1000);
 sum(Pie)/Num
 
