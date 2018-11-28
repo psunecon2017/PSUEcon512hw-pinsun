@@ -1,5 +1,5 @@
 % Econ 512 homework 3 Pin Sun, Oct, 2018
-
+% all is great
 %% Question 1
 %
 clear;
