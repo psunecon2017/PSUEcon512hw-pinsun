@@ -32,6 +32,8 @@ for i=1:N
     logv=logv+log(sumT);
 end
 logv
+% this if incorrect answer, try checking what is wrong with your
+% loglikelihood function
 %% Question 2
 %
 clear;
@@ -55,6 +57,7 @@ for i=1:N
     logv=logv+log(sumT);
 end
 logv
+% again, something is wrong with the computation of the loglikelihood
 %% Question 3
 %
 clear;
@@ -68,6 +71,9 @@ para1
 logv1=-2000*nlog1
 para2
 logv2=-2000*nlog1
+% parameter estimates are wrong, I suspect because of the mistake in the
+% function computation. the paremeter estimates resulting from different
+% techniques should be very close to one another
 %% Question 4
 %
 clear;
