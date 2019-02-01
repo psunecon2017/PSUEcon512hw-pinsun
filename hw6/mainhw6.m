@@ -85,6 +85,8 @@ title('p=1.1')
 xlabel('Initial Stock')
 ylabel('Firm Value')
 
+% the values are off, I think you misspecified updating
+
 %% Question 4
 %
 figure
@@ -106,6 +108,8 @@ plot(sprime(index3,:),pgrid(:));
 title(['Current Stock=',num2str(s(index3))])
 xlabel('Price')
 ylabel('Next Stock')
+
+% the policy is also wrong
 
 %% Question 5
 %
