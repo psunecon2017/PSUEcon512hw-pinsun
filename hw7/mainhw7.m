@@ -1,5 +1,5 @@
 % Econ 512 homework 7 Pin Sun, Feb, 2019
-
+%  all is good
 %%Question 1
 clc;
 close all;
