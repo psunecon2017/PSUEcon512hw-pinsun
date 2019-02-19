@@ -1,0 +1,193 @@
+% Econ 512 homework 7 Pin Sun, Feb, 2019
+
+%%Question 1
+clc;
+close all;
+clear;
+tic;
+params;
+replication=1e4;
+V=5*ones(L,L); % Initial guess for value function 
+TV=V;
+p=10*ones(L,L); % Initial guess best response
+Tp=p;
+tic
+for i=1:replication
+        p2=p;
+        W=getW(V);
+    for j=1:L
+        %for k=1:L
+            %Tp(j,k)=fsolve(@(p1)priceFOC_n(W,p1,p2,j,k),8);
+        %end
+        %options = optimset('TolX', 1e-12, 'TolFun', 1e-12);
+        Tp(j,:)=fsolve(@(p1)priceFOC(W,p1,p2,j),10*ones(1,L)); %,options);
+        DD=zeros(3,L);
+        DD(1,:)=exp(v-(Tp(j,:)))./(1+exp(v-(Tp(j,:)))+exp(v-(p2(:,j)')));
+        DD(2,:)=exp(v-(p2(:,j)'))./(1+exp(v-(Tp(j,:)))+exp(v-(p2(:,j)')));
+        DD(3,:)=1-DD(1,:)-DD(2,:);
+        TV(j,:)=DD(1,:).*(Tp(j,:)-c(j))+beta*(DD(3,:).*W(j,:,1)+ ...
+            DD(1,:).*W(j,:,2)+DD(2,:).*W(j,:,3));
+    end
+    diff=max(max(max(abs((TV-V)./(V)))),  max(max(abs((Tp-p)./(p)))));
+    if diff<CRIT
+        break;
+    else
+        %Tp(find(Tp<0))=0;
+        V=lambda*TV+(1-lambda)*V;
+        p=lambda*Tp+(1-lambda)*p;
+    end
+end
+toc
+
+%% Question 1
+figure(1)
+mesh(V)
+title('Value Function');
+%% Question 2
+Prob_tran=zeros(L,L); % transition matrix
+Prob_tran(1,1,1)=1;
+Prob_tran(1,1,2)=1-(1-delta);
+Prob_tran(1,2,2)=1-Prob_tran(1,1,2);
+Prob_tran(L,L,2)=1;
+Prob_tran(L,(L-1),1)=1-(1-delta)^L;
+Prob_tran(L,L,1)=1-Prob_tran(L,(L-1),1);
+for i=2:(L-1)
+    Prob_tran(i,i-1,1)=1-(1-delta)^i;
+    Prob_tran(i,i,1)=1-Prob_tran(i,i-1,1);
+    Prob_tran(i,i,2)=1-(1-delta)^i;
+    Prob_tran(i,i+1,2)=1-Prob_tran(i,i,2);
+end
+D1=exp(v-p)./(1+exp(v-p)+exp(v-p'));
+D2=D1';
+Distribution_1=zeros(L,L);
+Distribution_1(1,1)=1; % Initial distribution
+Distribution_2=Distribution_1;
+D00=(1-D1).*(1-D2);
+D01=(1-D1).*D2;
+D10=D1.*(1-D2);
+for i=1:10
+Distribution_1=D00.*(Prob_tran(:,:,1)'*(Distribution_1*Prob_tran(:,:,1)))+ ...
+       D01.*(Prob_tran(:,:,1)'*(Distribution_1*Prob_tran(:,:,2)))+ ...
+        D10.*(Prob_tran(:,:,2)'*(Distribution_1*Prob_tran(:,:,1)));
+end
+
+
+
+N=4;
+rng(20190218)
+T_1=31;
+rn_1=rand(N,T_1);
+State_1=ones(3,T_1);
+State_2=ones(3,T_1);
+State_count_1=zeros(L,L);
+State_count_2=zeros(L,L);
+State_count_3=zeros(L,L);
+p1=p;
+p2=p';
+for t=2:11
+    p1_t=p1(State_1(1,t-1),State_2(1,t-1));
+    p2_t=p2(State_1(1,t-1),State_2(1,t-1));
+    D1_t=exp(v-p1_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=exp(v-p2_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=D2_t/(1-D1_t);
+    Pro_tran_1=1-(1-delta)^(State_1(t-1));
+    Pro_tran_2=1-(1-delta)^(State_2(t-1));
+    if rn_1(1,t)<=D1_t && rn_1(2,t)>Pro_tran_1 && State_1(t-1)<L
+        State_1(t)=State_1(t-1)+1;
+        
+    elseif rn_1(1,t)>D1_t && rn_1(2,t)<=Pro_tran_1 && State_1(t-1)>1
+        State_1(t)=State_1(t-1)-1;
+    end
+    if rn_1(1,t)>D1_t && rn_1(3,t)<=D2_t && rn_1(4,t)>Pro_tran_2 && State_2(t-1)<L
+        State_2(t)=State_2(t-1)+1;
+    elseif rn_1(1,t)>D1_t &&rn_1(3,t)>D2_t && rn_1(4,t)<=Pro_tran_2 && State_2(t-1)>1
+        State_2(t)=State_2(t-1)-1;
+    end
+           State_count_1(State_1(t),State_2(t))=State_count_1(State_1(t),State_2(t))+1;
+end
+figure(2)
+mesh(State_count_1/sum(sum(State_count_1)))
+title('Distribution of States');
+for t=2:21
+    p1_t=p1(State_1(1,t-1),State_2(1,t-1));
+    p2_t=p2(State_1(1,t-1),State_2(1,t-1));
+    D1_t=exp(v-p1_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=exp(v-p2_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=D2_t/(1-D1_t);
+    Pro_tran_1=1-(1-delta)^(State_1(t-1));
+    Pro_tran_2=1-(1-delta)^(State_2(t-1));
+    if rn_1(1,t)<=D1_t && rn_1(2,t)>Pro_tran_1 && State_1(t-1)<L
+        State_1(t)=State_1(t-1)+1;
+        
+    elseif rn_1(1,t)>D1_t && rn_1(2,t)<=Pro_tran_1 && State_1(t-1)>1
+        State_1(t)=State_1(t-1)-1;
+    end
+    if rn_1(1,t)>D1_t && rn_1(3,t)<=D2_t && rn_1(4,t)>Pro_tran_2 && State_2(t-1)<L
+        State_2(t)=State_2(t-1)+1;
+    elseif rn_1(1,t)>D1_t && rn_1(3,t)>D2_t && rn_1(4,t)<=Pro_tran_2 && State_2(t-1)>1
+        State_2(t)=State_2(t-1)-1;
+    end
+           State_count_2(State_1(t),State_2(t))=State_count_2(State_1(t),State_2(t))+1;
+end
+figure(3)
+mesh(State_count_2/sum(sum(State_count_2)))
+title('Distribution of States');
+for t=2:31
+    p1_t=p1(State_1(1,t-1),State_2(1,t-1));
+    p2_t=p2(State_1(1,t-1),State_2(1,t-1));
+    D1_t=exp(v-p1_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=exp(v-p2_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=D2_t/(1-D1_t);
+    Pro_tran_1=1-(1-delta)^(State_1(t-1));
+    Pro_tran_2=1-(1-delta)^(State_2(t-1));
+    if rn_1(1,t)<=D1_t && rn_1(2,t)>Pro_tran_1 && State_1(t-1)<L
+        State_1(t)=State_1(t-1)+1;
+        
+    elseif rn_1(1,t)>D1_t && rn_1(2,t)<=Pro_tran_1 && State_1(t-1)>1
+        State_1(t)=State_1(t-1)-1;
+    end
+    if rn_1(1,t)>D1_t && rn_1(3,t)<=D2_t && rn_1(4,t)>Pro_tran_2 && State_2(t-1)<L
+        State_2(t)=State_2(t-1)+1;
+    elseif rn_1(1,t)>D1_t && rn_1(3,t)>D2_t && rn_1(4,t)<=Pro_tran_2 && State_2(t-1)>1
+        State_2(t)=State_2(t-1)-1;
+    end
+           State_count_3(State_1(t),State_2(t))=State_count_3(State_1(t),State_2(t))+1;
+end
+figure(4)
+mesh(State_count_3/sum(sum(State_count_3)))
+title('Distribution of States');
+%% Question 3
+T_2=1e5;
+rn_2=rand(N,T_2);
+State_count_long=zeros(L,L);
+State_1_l=ones(3,T_2);
+State_2_l=ones(3,T_2);
+for t=2:T_2
+    p1_t=p1(State_1_l(1,t-1),State_2_l(1,t-1));
+    p2_t=p2(State_1_l(1,t-1),State_2_l(1,t-1));
+    D1_t=exp(v-p1_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=exp(v-p2_t)/(1+exp(v-p1_t)+exp(v-p2_t));
+    D2_t=D2_t/(1-D1_t);
+    Pro_tran_1=1-(1-delta)^(State_1_l(t-1));
+    Pro_tran_2=1-(1-delta)^(State_2_l(t-1));
+    if rn_2(1,t)<=D1_t && rn_2(2,t)>Pro_tran_1 && State_1_l(t-1)<L
+        State_1_l(t)=State_1_l(t-1)+1;
+        
+    elseif rn_2(1,t)>D1_t && rn_2(2,t)<=Pro_tran_1 && State_1_l(t-1)>1
+        State_1_l(t)=State_1_l(t-1)-1;
+    end
+    if rn_2(1,t)>D1_t && rn_2(3,t)<=D2_t && rn_2(4,t)>Pro_tran_2 && State_2_l(t-1)<L
+        State_2_l(t)=State_2_l(t-1)+1;
+    elseif rn_2(1,t)>D1_t && rn_2(3,t)>D2_t && rn_2(4,t)<=Pro_tran_2 && State_2_l(t-1)>1
+        State_2_l(t)=State_2_l(t-1)-1;
+    end
+    if t>2e4
+           State_count_long(State_1_l(t),State_2_l(t))=State_count_long(State_1_l(t),State_2_l(t))+1;
+    end
+end
+figure(5)
+mesh(State_count_long/sum(sum(State_count_long)))
+title('Distribution of States');
+
+
+
